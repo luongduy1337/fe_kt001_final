@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import  CredentialsProvider  from "next-auth/providers/credentials"
+import axios from "../../../lib/axios";
 
 export const authOptions : NextAuthOptions = {
   // Configure one or more authentication providers
@@ -16,15 +17,26 @@ export const authOptions : NextAuthOptions = {
           password: { label: "Password", type: "password" }
         },
         async authorize(credentials, req) {
+
+          /* NOTE - Trích xuất dữ liệu từ credentials do signIn() mang về 
+          
           const { usernameOrEmail , password } = credentials as any;
-          const res = await fetch("http://localhost:8989/api/v1/auth/login", {
+
+          /*const res = await fetch("http://localhost:8989/api/v1/auth/login", {
             method : "POST",
             headers : {
                 "Content-Type": "application/json",
             },
             body : JSON.stringify({usernameOrEmail, password})
-          })
-          const {user, jwtAuthResponse} = await res.json();
+          })*/
+
+          const dataReq = {
+            usernameOrEmail,
+            password 
+          }
+
+          const res = await axios.post("/api/v1/auth/login", dataReq);
+          const user = await res.json();
           if(res.ok && user){
             return user;
           }else return null;

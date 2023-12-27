@@ -1,6 +1,15 @@
 export interface User {
-    name? : string | null | undefined;
+    name? : string | undefined | null;
     role? : string;
     userName? : string;
-    accessToken? : string
+    accessToken? : string,
+    refreshToken? : string,
+}
+
+export interface Posts {
+    id : number,
+    content : string,
+    description : string,
+    title : string,
+    categoryId : number,
 }

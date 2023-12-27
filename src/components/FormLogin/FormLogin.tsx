@@ -5,7 +5,7 @@ import { useFormState } from "react-dom"
 import * as actions from "@/actions"
 import { signIn } from "next-auth/react"
 
-export function FormLogin() {
+export function FormLogin({success, error} : {success : string, error : string}) {
     // const [formState , action] = useFormState(actions.loginUser, {message : ""});
     const action2 =async ( formData : FormData ) => {
         const result = await signIn('credentials', {
@@ -22,6 +22,16 @@ export function FormLogin() {
                 backgroundColor: "#F5FAFF"
             }}
         >
+            {success ? (
+                <div className="bg-green-500 rounded px-5 py-3">
+                    <span className="font-bold text-xl">Đăng ký tài khoản thành công!</span>
+                </div>
+            ) : null}
+            {error ? (
+                <div className="bg-red-500 rounded px-5 py-3">
+                <span className="font-bold text-xl">Email hoặc mật khẩu không chính xác</span>
+            </div>
+            ) : null}
             <h2 className="text-xl font-bold">Đăng nhập</h2>
             <form action={action2} className="space-y-5 w-full">
                 <Input name="usernameOrEmail" id="usernameOrEmail" label="Email" size="lg" variant="bordered" />
