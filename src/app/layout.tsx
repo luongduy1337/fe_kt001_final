@@ -5,6 +5,7 @@ import NextUIProviderCustom from "@/providers/next-ui-provider"
 import { Headers } from '@/components/Headers/Headers'
 import { NextAuthProvider } from '@/providers/next-auth-provider'
 import Footer from '@/components/Footer/Footer'
+import ToastProvider from '@/providers/toast-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,9 +26,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider session={session} >
           <NextUIProviderCustom>
-            <Headers />
-            {children}
-            <Footer />
+            <ToastProvider>
+              <Headers />
+              {children}
+              <Footer />
+            </ToastProvider>
           </NextUIProviderCustom>
         </NextAuthProvider>
       </body>

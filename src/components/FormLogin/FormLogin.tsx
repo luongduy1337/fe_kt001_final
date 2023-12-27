@@ -1,35 +1,58 @@
 'use client'
 import { Input } from "@nextui-org/react"
 import Link from "next/link"
-import { useFormState } from "react-dom"
-import * as actions from "@/actions"
 import { signIn } from "next-auth/react"
+import { toast } from "react-toastify"
 
-export function FormLogin({success, error} : {success : string, error : string}) {
+export function FormLogin({success, error, message, callBackUrl} : {success : string, error : string, message : string, callBackUrl : string}) {
     // const [formState , action] = useFormState(actions.loginUser, {message : ""});
-    const action2 =async ( formData : FormData ) => {
+    const action2 = async ( formData : FormData ) => {
         const result = await signIn('credentials', {
             usernameOrEmail : formData.get('usernameOrEmail'),
             password : formData.get('password'),
             redirect : true,
-            callbackUrl : '/' 
+            callbackUrl : '/', 
         })
     };
+    let endSlash = "";
+    if(callBackUrl){
+        const pathArray = new URL(callBackUrl).pathname.split('/');
+        endSlash = pathArray[pathArray.length - 1];
+    }
     return (
         <div
-            className="login__form w-2/5 flex flex-col items-center h-full px-40 py-10 gap-5"
+            className="login__form w-2/5 flex flex-col items-center h-full px-32 py-10 gap-5"
             style={{
                 backgroundColor: "#F5FAFF"
             }}
-        >
+        >    
             {success ? (
-                <div className="bg-green-500 rounded px-5 py-3">
-                    <span className="font-bold text-xl">Đăng ký tài khoản thành công!</span>
-                </div>
+                toast('Đăng ký tài khoản thành công', {
+                    position : 'top-right',
+                    autoClose : 3000,
+                    hideProgressBar : false,
+                    closeOnClick : true,
+                    theme : 'light',
+                    type : 'success'
+                })
             ) : null}
-            {error ? (
+            {error &&
+                toast('Email hoặc mật khẩu không chĩnh xác', {
+                    position : 'top-right',
+                    autoClose : 3000,
+                    hideProgressBar : false,
+                    closeOnClick : true,
+                    theme : 'light',
+                    type : 'error'
+                })}
+            {message ? 
                 <div className="bg-red-500 rounded px-5 py-3">
-                <span className="font-bold text-xl">Email hoặc mật khẩu không chính xác</span>
+                <span className="font-bold text-xl">{message}</span>
+            </div>
+             : null}
+            {endSlash ? (
+                <div className="bg-red-500 rounded px-5 py-3">
+                <span className="font-bold text-xl">Vui lòng đăng nhập tài khoản</span>
             </div>
             ) : null}
             <h2 className="text-xl font-bold">Đăng nhập</h2>
